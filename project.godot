@@ -8,14 +8,20 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "Node2D",
+"class": "Entity",
+"language": "GDScript",
+"path": "res://Entities/Entity.gd"
+} ]
 _global_script_class_icons={
-
+"Entity": ""
 }
 
 [application]
 
 config/name="Godot-wild- 11"
+run/main_scene="res://Scenes/Test.tscn"
 config/icon="res://icon.png"
 
 [debug]
