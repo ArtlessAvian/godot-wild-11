@@ -30,7 +30,7 @@ func _ready():
 func _process(_delta : float):
 	if not Engine.editor_hint:
 		self.position.x = self.true_pos.x;
-		self.position.y = -self.true_pos.y + self.true_pos.z * 0.5;
+		self.position.y = -self.true_pos.y - self.true_pos.z * 0.5;
 	if Input.is_action_just_pressed("ui_home"):
 		self.air_vel.y = 600;
 		self.grounded = false;
@@ -64,6 +64,8 @@ func _physics_process(_delta):
 			self.air_vel = Vector3.ZERO;
 		else:
 			self.knockback.y *= -0.5;
+	
+	self.true_pos.z = clamp(self.true_pos.z, -200, 200);
 
 func check_relevance(player : Entity):
 	var relevant : bool = abs(player.true_pos.z - self.true_pos.z) < Z_DISTANCE;
@@ -76,7 +78,7 @@ func _on_Hurtboxes_area_entered(area : Area2D):
 	self.emit_signal("hit_someone", self, entity, 0.2)
 	print(self.name, " hit someone!")
 #	entity.receive_knockback(self, Vector2(5, 0), 0.3);
-	entity.call_deferred("receive_knockback", self, Vector2(0, 300), 0.5, false);
+	entity.call_deferred("receive_knockback", self, Vector2(300, 600), 0.5, false);
 
 func receive_knockback(hitter : Entity, kb : Vector2, hs : float, kd : bool):
 	self.knockback = kb;
