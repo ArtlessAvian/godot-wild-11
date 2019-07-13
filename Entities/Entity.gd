@@ -23,10 +23,12 @@ var knockback : Vector2 = Vector2.ZERO; # Generally only X and Y
 var hitstun : float = 0;
 var knockdown : bool = false;
 
+var state_machine : AnimationNodeStateMachinePlayback;
+
 func _ready():
 	self.true_pos = Vector3(self.position.x, 0, self.position.y);
-#	self.air_vel = Vector3(300, 300, 0);
-	
+	self.state_machine = $AnimationTree.get("parameters/playback");
+
 func _process(_delta : float):
 	if not Engine.editor_hint:
 		self.position.x = self.true_pos.x;
@@ -35,27 +37,29 @@ func _process(_delta : float):
 		self.air_vel.y = 600;
 		self.grounded = false;
 
-func _physics_process(_delta):
+func _physics_process(delta):
+	self.propagate_call(self.state_machine.get_current_node() + "Run", [delta]);
+	
 	if self.hitstun <= 0 and not knockdown:
 		if grounded:
-			self.true_pos += self.ground_vel * _delta;
+			self.true_pos += self.ground_vel * delta;
 		else:
-			self.true_pos += self.air_vel * _delta;
-			self.air_vel.y -= GRAVITY * _delta;
+			self.true_pos += self.air_vel * delta;
+			self.air_vel.y -= GRAVITY * delta;
 	else:
-		self.true_pos.x += self.knockback.x * _delta;
+		self.true_pos.x += self.knockback.x * delta;
 		if grounded:
-			self.knockback.x -= sign(self.knockback.x) * max(0, 10 * _delta)
+			self.knockback.x -= sign(self.knockback.x) * max(0, 10 * delta)
 		else:
-			self.true_pos.y += self.knockback.y * _delta;
-			self.knockback.y -= GRAVITY * _delta;
+			self.true_pos.y += self.knockback.y * delta;
+			self.knockback.y -= GRAVITY * delta;
 		
-		hitstun -= _delta
+		hitstun -= delta
 		if hitstun <= 0:
 			if not self.grounded:
 				self.air_vel.x = self.knockback.x;
 				self.air_vel.y = self.knockback.y;
-			$AnimationPlayer.play("Idle");
+			self.state_machine.start("Idle");
 	
 	if self.true_pos.y <= 0:
 		if not knockdown or self.knockback.y < KNOCKDOWN_RECOVERY:
@@ -90,4 +94,10 @@ func receive_knockback(hitter : Entity, kb : Vector2, hs : float, kd : bool):
 	self.hitstun = hs;
 	self.knockdown = kd;
 	$Hurtboxes/CollisionShape2D.disabled = true;
-	$AnimationPlayer.play("Oof");
+	self.state_machine.start("Oof");
+
+# Animation Shenangians
+# This would work, but https://github.com/godotengine/godot/issues/28311
+#func _on_AnimationPlayer_animation_changed(old_name, new_name):
+#	self.propagate_call(old_name + "Exit");
+#	self.propagate_call(new_name + "Enter");

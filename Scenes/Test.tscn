@@ -6,9 +6,26 @@
 [node name="Node2D" type="YSort"]
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 66.2978, 6.13867 )
 
 [node name="Entity" parent="." instance=ExtResource( 2 )]
-position = Vector2( -44.4066, -2.62674 )
+position = Vector2( 109.061, 8.42288 )
+scale = Vector2( -1, 1 )
+
+[node name="Entity2" parent="." instance=ExtResource( 2 )]
+position = Vector2( 366.885, -1.39899 )
+scale = Vector2( -1, 1 )
+
+[node name="Entity3" parent="." instance=ExtResource( 2 )]
+position = Vector2( 264.983, -94.707 )
+scale = Vector2( -1, 1 )
+
+[node name="Entity4" parent="." instance=ExtResource( 2 )]
+position = Vector2( 266.211, 72.2652 )
+scale = Vector2( -1, 1 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+__meta__ = {
+"_edit_lock_": true
+}
