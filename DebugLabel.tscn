@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://DebugLabel.gd" type="Script" id=1]
+
+[node name="DebugLabel" type="Label"]
+margin_left = 59.5606
+margin_top = -101.985
+margin_right = 99.5606
+margin_bottom = -87.9854
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

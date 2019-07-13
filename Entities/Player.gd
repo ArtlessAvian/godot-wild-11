@@ -3,76 +3,84 @@ extends Entity
 const P_C : String = "parameters/conditions/"
 const DEADZONE : float = 0.2;
 
-func _physics_process(_delta):
-	var input : Vector3 = self.get_input();
-	
-	$AnimationTree.set(P_C + "input", input != Vector3.ZERO);
-	$AnimationTree.set(P_C + "!input", input == Vector3.ZERO);
-	$AnimationTree.set(P_C + "light", Input.is_action_just_pressed("ui_accept"));
-	$AnimationTree.set(P_C + "grounded", self.grounded);
-	
-#	$AnimationTree.tree_root.set_parameter("parameters/conditions/input", input == Vector3.ZERO)
-	
-#	if attacking:
-#		if not $AnimationPlayer.is_playing():
-#			attacking = false;
-#
-#	if not attacking:
-#		if grounded:
-#			if (input.length_squared() < 0.4):
-#				if not $AnimationPlayer.current_animation in ["StopWalking", "Idle"]:
-#					$AnimationPlayer.play("StopWalking");
-#					$AnimationPlayer.queue("Idle");
-#				else:
-#					match $AnimationPlayer.current_animation:
-#						"StopWalking":
-#							self.ground_vel *= 0.9;
-#						"Idle":
-#							self.ground_vel = Vector3.ZERO;
-#			else:
-#				match $AnimationPlayer.current_animation:
-#					"StopWalking":
-#						$AnimationPlayer.play("Run");
-#						self.ground_vel = input * 400;
-#					"Idle":
-#						$AnimationPlayer.play("Walk");
-#						self.ground_vel = input * 200;
-#					"Walk":
-#						self.ground_vel = input * 200;
-#					"Run":
-#						self.ground_vel = input * 400;
-#
-#				if self.ground_vel.x != 0:
-#					self.scale.x = sign(self.ground_vel.x);
-#
-#	if Input.is_action_just_pressed("ui_accept"):
-#		attacking = true;
-#		self.ground_vel = Vector3.ZERO;
-#		$AnimationPlayer.play("Light1");
-	
-#	._physics_process(delta);
+export (bool) var attack_dimensional : bool = false;
+var has_hit : bool = false;
 
-static func get_input() -> Vector3:
-	var input : Vector3 = Vector3();
-	input.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left");
-	input.z = Input.get_action_strength("ui_up") - Input.get_action_strength("ui_down");
+static func get_input() -> Vector2:
+	var input : Vector2 = Vector2();
+	input.x = Input.get_action_strength("right") - Input.get_action_strength("left");
+	input.y = Input.get_action_strength("up") - Input.get_action_strength("down");
 	if input.length_squared() > 1:
 		input = input.normalized();
 	return input;
 
+func _physics_process(_delta):
+	var input : Vector2 = self.get_input();
+	
+	$AnimationTree.set(P_C + "input", input != Vector2.ZERO);
+	$AnimationTree.set(P_C + "!input", input == Vector2.ZERO);
+	$AnimationTree.set(P_C + "run", Input.is_action_pressed("run"));
+	$AnimationTree.set(P_C + "jump", Input.is_action_pressed("jump"));
+	$AnimationTree.set(P_C + "light", Input.is_action_just_pressed("light"));
+	$AnimationTree.set(P_C + "heavy", Input.is_action_just_pressed("heavy"));
+	$AnimationTree.set(P_C + "light_cancel", Input.is_action_just_pressed("light") and has_hit);
+	$AnimationTree.set(P_C + "heavy_cancel", Input.is_action_just_pressed("heavy") and has_hit);
+	$AnimationTree.set(P_C + "jump_cancel", Input.is_action_pressed("jump") and has_hit);
+	$AnimationTree.set(P_C + "grounded", self.grounded);
+	
+	if Input.is_action_just_pressed("ui_page_up"):
+		self.dimension += 1;
+	if Input.is_action_just_pressed("ui_page_down"):
+		self.dimension -= 1;
+	
+#	._physics_process(delta);
+
 func RunRun(_delta : float):
-	self.ground_vel = get_input() * 400;
-	if self.ground_vel.x != 0:
-		self.scale.x = sign(self.ground_vel.x);
+	self.input_vel = get_input() * 400;
+	if self.input_vel.x != 0:
+		self.scale.x = sign(self.input_vel.x);
+	self.has_hit = false;
+	self.strong_friction = true;
 
 func WalkRun(_delta : float):
-	self.ground_vel = get_input() * 200;
-	if self.ground_vel.x != 0:
-		self.scale.x = sign(self.ground_vel.x);
+	self.input_vel = get_input() * 200;
+	if self.input_vel.x != 0:
+		self.scale.x = sign(self.input_vel.x);
+	self.has_hit = false;
 
-func WalkExit():
-	self.ground_vel = Vector3.ZERO;
+func IdleRun(_delta : float):
+	self.input_vel = Vector2.ZERO;
+	self.has_hit = false;
 
-func RunExit():
-	self.ground_vel = Vector3.ZERO;
+func JumpRun(_delta : float):
+	if self.grounded:
+		self.grounded = false;
+		self.true_vel.y += 300;
+	self.has_hit = false;
+	
+func Light1Run(_delta : float):
+	self.input_vel = Vector2.ZERO;
+	self.light2_time = 0;
+	
+var light2_time : float = 0;
+func Light2Run(delta : float):
+	light2_time += delta;
+	self.input_vel = Vector2(100 - 100 * light2_time, 0) * self.scale;
+
+func Heavy1Run(_delta : float):
+	self.input_vel = Vector2.ZERO;
+
+
+
+func _on_Hurtboxes_area_entered(area : Area2D):
+	._on_Hurtboxes_area_entered(area);
+	if self.attack_dimensional:
+		area.get_parent().dimension += 1;
+	self.has_hit = true;
+
+#func WalkExit():
+#	self.input_vel = Vector3.ZERO;
+#
+#func RunExit():
+#	self.input_vel = Vector3.ZERO;
 	

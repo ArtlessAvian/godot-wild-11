@@ -1,7 +1,8 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://Entities/Player.gd" type="Script" id=1]
 [ext_resource path="res://Assets/spritesheet test.png" type="Texture" id=2]
+[ext_resource path="res://DebugLabel.tscn" type="PackedScene" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 20, 20 )
@@ -9,7 +10,7 @@ extents = Vector2( 20, 20 )
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 10, 20 )
 
-[sub_resource type="Animation" id=25]
+[sub_resource type="Animation" id=3]
 resource_name = "Heavy"
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:rotation_degrees")
@@ -30,10 +31,10 @@ tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"times": PoolRealArray( 0.4, 0.5 ),
-"transitions": PoolRealArray( 1, 1 ),
+"times": PoolRealArray( 0, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
-"values": [ false, true ]
+"values": [ true, false, true ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("Sprite:frame")
@@ -47,8 +48,56 @@ tracks/2/keys = {
 "update": 1,
 "values": [ 0, 6, 7 ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:attack_kb")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ Vector2( 400, 400 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath(".:attack_hitstun")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1.0 ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath(".:attack_dimensional")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath(".:attack_knocksdown")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=4]
 length = 0.5
 loop = true
 tracks/0/type = "value"
@@ -58,7 +107,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0.018804, 0.4, 0.5 ),
+"times": PoolRealArray( 0, 0.4, 0.5 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ Vector2( 0, 0 ), Vector2( 0, -5 ), Vector2( 0, 0 ) ]
@@ -75,9 +124,151 @@ tracks/1/keys = {
 "update": 1,
 "values": [ 0 ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0.0 ]
+}
 
-[sub_resource type="Animation" id=4]
-resource_name = "Light1"
+[sub_resource type="Animation" id=40]
+resource_name = "Jump"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 360.0 ]
+}
+
+[sub_resource type="Animation" id=45]
+resource_name = "Knockdown"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ -90.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.5
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.15, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 4, 5, 6, 7 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Hurtboxes/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.15, 0.25 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ true, false, true ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Hurtboxes/CollisionShape2D:shape:extents")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 10, 20 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:attack_kb")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ Vector2( 100, 0 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath(".:attack_hitstun")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0.4 ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath(".:attack_dimensional")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath(".:attack_knocksdown")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=30]
+resource_name = "Light2"
 length = 0.6
 step = 0.05
 tracks/0/type = "value"
@@ -116,9 +307,56 @@ tracks/2/keys = {
 "update": 0,
 "values": [ Vector2( 10, 20 ) ]
 }
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:attack_kb")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ Vector2( 400, 300 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath(".:attack_dimensional")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath(".:attack_knocksdown")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath(".:attack_hitstun")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 0.4 ]
+}
 
-[sub_resource type="Animation" id=5]
-resource_name = "Oof"
+[sub_resource type="Animation" id=6]
 length = 100.0
 loop = true
 tracks/0/type = "value"
@@ -134,8 +372,7 @@ tracks/0/keys = {
 "values": [ 3 ]
 }
 
-[sub_resource type="Animation" id=6]
-resource_name = "Run"
+[sub_resource type="Animation" id=7]
 length = 0.5
 loop = true
 tracks/0/type = "value"
@@ -151,8 +388,7 @@ tracks/0/keys = {
 "values": [ 8, 9, 10, 11, 12 ]
 }
 
-[sub_resource type="Animation" id=7]
-resource_name = "StopWalking"
+[sub_resource type="Animation" id=8]
 length = 0.2
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -167,7 +403,7 @@ tracks/0/keys = {
 "values": [ 1 ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=9]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -182,75 +418,119 @@ tracks/0/keys = {
 "values": [ 8, 9, 10, 11, 12 ]
 }
 
-[sub_resource type="AnimationNodeAnimation" id=9]
-animation = "Idle"
+[sub_resource type="AnimationNodeAnimation" id=34]
+animation = "Heavy"
 
 [sub_resource type="AnimationNodeAnimation" id=10]
-animation = "Light1"
+animation = "Idle"
+
+[sub_resource type="AnimationNodeAnimation" id=41]
+animation = "Jump"
 
 [sub_resource type="AnimationNodeAnimation" id=11]
-animation = "Oof"
+animation = "Light1"
+
+[sub_resource type="AnimationNodeAnimation" id=31]
+animation = "Light2"
 
 [sub_resource type="AnimationNodeAnimation" id=12]
-animation = "Run"
+animation = "Oof"
 
 [sub_resource type="AnimationNodeAnimation" id=13]
-animation = "StopWalking"
+animation = "Run"
 
-[sub_resource type="AnimationNodeAnimation" id=14]
+[sub_resource type="AnimationNodeAnimation" id=15]
 animation = "Walk"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=15]
-advance_condition = "input"
-
 [sub_resource type="AnimationNodeStateMachineTransition" id=16]
-advance_condition = "!input"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=17]
-switch_mode = 2
-auto_advance = true
-advance_condition = "!input"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=18]
 advance_condition = "input"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=19]
-advance_condition = "!input"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=20]
-advance_condition = "light"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=21]
 advance_condition = "light"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=22]
+advance_condition = "light"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=23]
 switch_mode = 2
 auto_advance = true
 
-[sub_resource type="AnimationNodeStateMachine" id=23]
-states/Idle/node = SubResource( 9 )
-states/Idle/position = Vector2( 364, 63 )
-states/Light1/node = SubResource( 10 )
-states/Light1/position = Vector2( 364, -44 )
-states/Oof/node = SubResource( 11 )
-states/Oof/position = Vector2( 130, 63 )
-states/Run/node = SubResource( 12 )
-states/Run/position = Vector2( 506, 152 )
-states/StopWalking/node = SubResource( 13 )
-states/StopWalking/position = Vector2( 349, 152 )
-states/Walk/node = SubResource( 14 )
-states/Walk/position = Vector2( 506, 63 )
-transitions = [ "Idle", "Walk", SubResource( 15 ), "Walk", "StopWalking", SubResource( 16 ), "StopWalking", "Idle", SubResource( 17 ), "StopWalking", "Run", SubResource( 18 ), "Run", "StopWalking", SubResource( 19 ), "Idle", "Light1", SubResource( 20 ), "Walk", "Light1", SubResource( 21 ), "Light1", "Idle", SubResource( 22 ) ]
-graph_offset = Vector2( 7, -123 )
+[sub_resource type="AnimationNodeStateMachineTransition" id=26]
+advance_condition = "run"
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=24]
+[sub_resource type="AnimationNodeStateMachineTransition" id=27]
+advance_condition = "run"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=28]
+advance_condition = "!input"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=29]
+advance_condition = "!input"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=32]
+advance_condition = "light_cancel"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=33]
+switch_mode = 2
+auto_advance = true
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=35]
+advance_condition = "heavy_cancel"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=36]
+advance_condition = "heavy_cancel"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=37]
+switch_mode = 2
+auto_advance = true
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=38]
+advance_condition = "heavy"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=39]
+advance_condition = "heavy"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=42]
+advance_condition = "jump"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=43]
+advance_condition = "jump"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=44]
+advance_condition = "jump"
+
+[sub_resource type="AnimationNodeStateMachine" id=24]
+states/Heavy/node = SubResource( 34 )
+states/Heavy/position = Vector2( 719, -58 )
+states/Idle/node = SubResource( 10 )
+states/Idle/position = Vector2( 345, 63 )
+states/Jump/node = SubResource( 41 )
+states/Jump/position = Vector2( 550, 176 )
+states/Light1/node = SubResource( 11 )
+states/Light1/position = Vector2( 174, -58 )
+states/Light2/node = SubResource( 31 )
+states/Light2/position = Vector2( 250, -144 )
+states/Oof/node = SubResource( 12 )
+states/Oof/position = Vector2( 130, 63 )
+states/Run/node = SubResource( 13 )
+states/Run/position = Vector2( 317, 176 )
+states/Walk/node = SubResource( 15 )
+states/Walk/position = Vector2( 506, 63 )
+transitions = [ "Idle", "Walk", SubResource( 16 ), "Idle", "Light1", SubResource( 21 ), "Walk", "Light1", SubResource( 22 ), "Light1", "Idle", SubResource( 23 ), "Idle", "Run", SubResource( 26 ), "Walk", "Run", SubResource( 27 ), "Run", "Idle", SubResource( 28 ), "Walk", "Idle", SubResource( 29 ), "Light1", "Light2", SubResource( 32 ), "Light2", "Idle", SubResource( 33 ), "Light1", "Heavy", SubResource( 35 ), "Light2", "Heavy", SubResource( 36 ), "Heavy", "Idle", SubResource( 37 ), "Idle", "Heavy", SubResource( 38 ), "Walk", "Heavy", SubResource( 39 ), "Idle", "Jump", SubResource( 42 ), "Walk", "Jump", SubResource( 43 ), "Run", "Jump", SubResource( 44 ) ]
+start_node = "Idle"
+graph_offset = Vector2( -338, -83 )
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=25]
 
 [node name="Player" type="Node2D"]
-rotation = 18.8496
 script = ExtResource( 1 )
+attack_kb = Vector2( 400, 400 )
+attack_hitstun = 1.0
+attack_knocksdown = true
+attack_dimensional = true
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 0, -3.98923 )
+position = Vector2( 0, -3.10982 )
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 2 )
 vframes = 8
@@ -281,20 +561,37 @@ disabled = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 playback_process_mode = 0
-anims/Heavy = SubResource( 25 )
-anims/Idle = SubResource( 3 )
-anims/Light1 = SubResource( 4 )
-anims/Oof = SubResource( 5 )
-anims/Run = SubResource( 6 )
-anims/StopWalking = SubResource( 7 )
-anims/Walk = SubResource( 8 )
+anims/Heavy = SubResource( 3 )
+anims/Idle = SubResource( 4 )
+anims/Jump = SubResource( 40 )
+anims/Knockdown = SubResource( 45 )
+anims/Light1 = SubResource( 5 )
+anims/Light2 = SubResource( 30 )
+anims/Oof = SubResource( 6 )
+anims/Run = SubResource( 7 )
+anims/StopWalking = SubResource( 8 )
+anims/Walk = SubResource( 9 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 23 )
+tree_root = SubResource( 24 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/playback = SubResource( 24 )
-parameters/conditions/!input = false
+parameters/playback = SubResource( 25 )
+parameters/conditions/!input = true
+parameters/conditions/heavy = false
+parameters/conditions/heavy_cancel = false
 parameters/conditions/input = false
+parameters/conditions/jump = false
 parameters/conditions/light = false
+parameters/conditions/light_cancel = false
+parameters/conditions/run = false
+
+[node name="DebugLabel" parent="." instance=ExtResource( 3 )]
+margin_left = 52.3412
+margin_top = -88.4471
+margin_right = 92.3412
+margin_bottom = -74.4471
+text = "Null"
+nodepath = NodePath("..")
+property = "true_vel"
 [connection signal="area_entered" from="Hurtboxes" to="." method="_on_Hurtboxes_area_entered"]

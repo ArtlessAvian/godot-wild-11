@@ -1,31 +1,52 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Entities/Player.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Entities/EnemyTest.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Entities/EnemyTest.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Entities/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/0effort.png" type="Texture" id=3]
+[ext_resource path="res://Scenes/Level.gd" type="Script" id=4]
 
-[node name="Node2D" type="YSort"]
+[node name="Node2D" type="Node2D"]
+pause_mode = 2
+script = ExtResource( 4 )
+player_path = NodePath("YSort/Player")
 
-[node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 66.2978, 6.13867 )
+[node name="0effort" type="Sprite" parent="."]
+texture = ExtResource( 3 )
 
-[node name="Entity" parent="." instance=ExtResource( 2 )]
-position = Vector2( 109.061, 8.42288 )
+[node name="YSort" type="YSort" parent="."]
+pause_mode = 1
+
+[node name="Player" parent="YSort" instance=ExtResource( 2 )]
+position = Vector2( -375.177, -10.0238 )
+
+[node name="Entity" parent="YSort" instance=ExtResource( 1 )]
+position = Vector2( 174.7, 5.72791 )
+scale = Vector2( -1, 1 )
+attack_hitstun = 0.0
+
+[node name="Entity4" parent="YSort" instance=ExtResource( 1 )]
+position = Vector2( -315.034, 0 )
 scale = Vector2( -1, 1 )
 
-[node name="Entity2" parent="." instance=ExtResource( 2 )]
-position = Vector2( 366.885, -1.39899 )
+[node name="Entity2" parent="YSort" instance=ExtResource( 1 )]
+position = Vector2( 242.003, -74.4625 )
 scale = Vector2( -1, 1 )
+attack_hitstun = 0.0
 
-[node name="Entity3" parent="." instance=ExtResource( 2 )]
-position = Vector2( 264.983, -94.707 )
+[node name="Entity5" parent="YSort" instance=ExtResource( 1 )]
+position = Vector2( 105.966, -42.9591 )
 scale = Vector2( -1, 1 )
+attack_hitstun = 0.0
 
-[node name="Entity4" parent="." instance=ExtResource( 2 )]
-position = Vector2( 266.211, 72.2652 )
+[node name="Entity3" parent="YSort" instance=ExtResource( 1 )]
+position = Vector2( 41.5272, 10.0238 )
 scale = Vector2( -1, 1 )
+attack_hitstun = 0.0
+
+[node name="Entity6" parent="YSort" instance=ExtResource( 1 )]
+position = Vector2( 263.483, 8.59183 )
+scale = Vector2( -1, 1 )
+attack_hitstun = 0.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
-__meta__ = {
-"_edit_lock_": true
-}
