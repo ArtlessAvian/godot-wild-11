@@ -40,7 +40,6 @@ func RunRun(_delta : float):
 	if self.input_vel.x != 0:
 		self.scale.x = sign(self.input_vel.x);
 	self.has_hit = false;
-	self.strong_friction = true;
 
 func WalkRun(_delta : float):
 	self.input_vel = get_input() * 200;
