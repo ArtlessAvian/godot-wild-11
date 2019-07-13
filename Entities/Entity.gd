@@ -21,8 +21,12 @@ var true_vel : Vector3 = Vector3.ZERO;
 
 var hitstun : float = 0;
 var knockdown : bool = false;
+var health : int = 5;
+export (bool) var friendly : bool = false;
 
 var state_machine : AnimationNodeStateMachinePlayback;
+var last_state : String = "";
+
 export (Vector2) var attack_kb : Vector2 = Vector2(50, 0);
 export (float) var attack_hitstun : float = 0.1;
 export (bool) var attack_knocksdown : bool = false;
@@ -40,7 +44,12 @@ func _physics_process(delta):
 	if Engine.editor_hint:
 		# Hack, to stop the below statement from spamming debug
 		return;
-		
+	
+	if self.last_state != self.state_machine.get_current_node():	
+		self.propagate_call(self.last_state + "Exit");
+		self.propagate_call("anyTransition");
+		self.propagate_call(self.state_machine.get_current_node() + "Enter");
+		self.last_state = self.state_machine.get_current_node();
 	self.propagate_call(self.state_machine.get_current_node() + "Run", [delta]);
 	
 	if hitstun <= 0 and self.grounded:
@@ -137,9 +146,16 @@ func check_relevance(player : Entity):
 	if relevant:
 		pass
 
+func anyTransition():
+	self.attack_knocksdown = false;
+	$Hurtboxes/CollisionShape2D.disabled = true;
+
 # Hitting each other
 func _on_Hurtboxes_area_entered(area : Area2D):
 	var entity : Entity = area.get_parent();
+	if (entity.friendly == self.friendly):
+		return;
+	
 	self.emit_signal("hit_someone", self, entity, 0.2)
 	print(self.name, " hit someone!")
 #	entity.receive_knockback(self, Vector2(5, 0), 0.3);
@@ -157,13 +173,19 @@ func receive_knockback(hitter : Entity, knockback : Vector2, hs : float, kd : bo
 	self.true_vel.z = 0;
 	self.input_vel = Vector2.ZERO;
 	
-	self.hitstun = hs;
 	self.knockdown = kd;
 	$Hurtboxes/CollisionShape2D.disabled = true;
-	if kd:
-		self.state_machine.start("Knockdown");
+	health -= 1;
+	if health <= 0:
+		self.state_machine.start("Dead");
+		$Hitbox.collision_mask = 0;
 	else:
-		self.state_machine.start("Oof");
+		self.hitstun = hs;
+		if kd:
+			self.state_machine.start("Knockdown");
+		else:
+			self.state_machine.start("Oof");
+	
 
 # Animation Shenangians
 # This would work, but https://github.com/godotengine/godot/issues/28311

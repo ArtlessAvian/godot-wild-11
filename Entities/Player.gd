@@ -28,6 +28,7 @@ func _physics_process(_delta):
 	$AnimationTree.set(P_C + "jump_cancel", Input.is_action_pressed("jump") and has_hit);
 	$AnimationTree.set(P_C + "grounded", self.grounded);
 	
+	
 	if Input.is_action_just_pressed("ui_page_up"):
 		self.dimension += 1;
 	if Input.is_action_just_pressed("ui_page_down"):
@@ -35,46 +36,51 @@ func _physics_process(_delta):
 	
 #	._physics_process(delta);
 
+func anyTransition():
+	.anyTransition();
+	self.has_hit = false;
+	self.attack_dimensional = false;
+
 func RunRun(_delta : float):
 	self.input_vel = get_input() * 400;
 	if self.input_vel.x != 0:
 		self.scale.x = sign(self.input_vel.x);
-	self.has_hit = false;
 
 func WalkRun(_delta : float):
 	self.input_vel = get_input() * 200;
 	if self.input_vel.x != 0:
 		self.scale.x = sign(self.input_vel.x);
-	self.has_hit = false;
 
 func IdleRun(_delta : float):
 	self.input_vel = Vector2.ZERO;
-	self.has_hit = false;
 
 func JumpRun(_delta : float):
 	if self.grounded:
 		self.grounded = false;
-		self.true_vel.y += 300;
+		self.true_vel.y += 400;
+		self.true_vel.x = self.get_input().x * 400;
 	self.has_hit = false;
 	
 func Light1Run(_delta : float):
 	self.input_vel = Vector2.ZERO;
-	self.light2_time = 0;
-	
-var light2_time : float = 0;
-func Light2Run(delta : float):
-	light2_time += delta;
-	self.input_vel = Vector2(100 - 100 * light2_time, 0) * self.scale;
 
-func Heavy1Run(_delta : float):
+var light3_time : float = 0;
+func Light3Enter():
+	self.light3_time = 0;
+
+func Light3Run(delta : float):
+	light3_time += delta;
+	self.input_vel = Vector2(400 - 800 * light3_time, 0) * self.scale;
+
+func HeavyRun(_delta : float):
 	self.input_vel = Vector2.ZERO;
-
-
 
 func _on_Hurtboxes_area_entered(area : Area2D):
 	._on_Hurtboxes_area_entered(area);
 	if self.attack_dimensional:
 		area.get_parent().dimension += 1;
+		if Input.is_action_pressed("heavy") and not has_hit:
+			self.dimension += 1;
 	self.has_hit = true;
 
 #func WalkExit():
