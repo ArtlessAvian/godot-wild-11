@@ -6,6 +6,8 @@ signal hit_someone # self, who i hit, hitlag
 # Has a position in 3D space.
 # Handles where the Entity should be drawn.
 
+const P_C : String = "parameters/conditions/"
+
 const Z_DISTANCE = 0;
 const GRAVITY = 1200;
 const FRICTION = 10;
@@ -44,6 +46,8 @@ func _physics_process(delta):
 	if Engine.editor_hint:
 		# Hack, to stop the below statement from spamming debug
 		return;
+	
+	$AnimationTree.set(P_C + "hitstun_done", hitstun <= 0);
 	
 	if self.last_state != self.state_machine.get_current_node():	
 		self.propagate_call(self.last_state + "Exit");
@@ -90,20 +94,16 @@ func _physics_process(delta):
 					self.true_pos.y = 0;
 					self.true_vel.y = 0;
 					self.grounded = true;
+					self.knockdown = false;
 			else:
 				self.true_pos.y = 0;
 				self.true_vel.y = 0;
 				self.grounded = true;
-				if not self.state_machine.get_current_node() in ["Oof"]:
+				if not self.state_machine.get_current_node() in ["Oof", "Knockdown", "Dead"]:
 					self.state_machine.start("Idle");
 	
 	if hitstun > 0 and (not knockdown or grounded):
 		hitstun -= delta;
-		if hitstun <= 0:
-			if self.grounded:
-				self.state_machine.start("Idle");
-			else:
-				self.state_machine.start("Idle");
 	
 #	else:
 #		self.true_pos.x += self.knockback.x * delta;
@@ -153,17 +153,14 @@ func anyTransition():
 # Hitting each other
 func _on_Hurtboxes_area_entered(area : Area2D):
 	var entity : Entity = area.get_parent();
-	if (entity.friendly == self.friendly):
+	if (entity.friendly == self.friendly) or entity.state_machine.get_current_node() == "Dead":
 		return;
 	
 	self.emit_signal("hit_someone", self, entity, 0.2)
-	print(self.name, " hit someone!")
 #	entity.receive_knockback(self, Vector2(5, 0), 0.3);
 	entity.call_deferred("receive_knockback", self, self.attack_kb, self.attack_hitstun, self.attack_knocksdown);
 
 func receive_knockback(hitter : Entity, knockback : Vector2, hs : float, kd : bool):
-	print(self.name, " got hit!")
-	
 	if hitter.true_pos.x > self.true_pos.x:
 		knockback.x *= -1;
 	if knockback.y > 0:
@@ -181,10 +178,11 @@ func receive_knockback(hitter : Entity, knockback : Vector2, hs : float, kd : bo
 		$Hitbox.collision_mask = 0;
 	else:
 		self.hitstun = hs;
-		if kd:
+		if self.knockdown:
 			self.state_machine.start("Knockdown");
 		else:
 			self.state_machine.start("Oof");
+		$AnimationTree.set(P_C + "hitstun_done", hitstun <= 0);
 	
 
 # Animation Shenangians

@@ -1,6 +1,5 @@
 extends Entity
 
-const P_C : String = "parameters/conditions/"
 const DEADZONE : float = 0.2;
 
 export (bool) var attack_dimensional : bool = false;
@@ -19,7 +18,7 @@ func _physics_process(_delta):
 	
 	$AnimationTree.set(P_C + "input", input != Vector2.ZERO);
 	$AnimationTree.set(P_C + "!input", input == Vector2.ZERO);
-	$AnimationTree.set(P_C + "run", Input.is_action_pressed("run"));
+	$AnimationTree.set(P_C + "run", Input.is_action_pressed("run") and input != Vector2.ZERO);
 	$AnimationTree.set(P_C + "jump", Input.is_action_pressed("jump"));
 	$AnimationTree.set(P_C + "light", Input.is_action_just_pressed("light"));
 	$AnimationTree.set(P_C + "heavy", Input.is_action_just_pressed("heavy"));
@@ -27,12 +26,6 @@ func _physics_process(_delta):
 	$AnimationTree.set(P_C + "heavy_cancel", Input.is_action_just_pressed("heavy") and has_hit);
 	$AnimationTree.set(P_C + "jump_cancel", Input.is_action_pressed("jump") and has_hit);
 	$AnimationTree.set(P_C + "grounded", self.grounded);
-	
-	
-	if Input.is_action_just_pressed("ui_page_up"):
-		self.dimension += 1;
-	if Input.is_action_just_pressed("ui_page_down"):
-		self.dimension -= 1;
 	
 #	._physics_process(delta);
 
@@ -81,6 +74,8 @@ func _on_Hurtboxes_area_entered(area : Area2D):
 		area.get_parent().dimension += 1;
 		if Input.is_action_pressed("heavy") and not has_hit:
 			self.dimension += 1;
+#	if not self.grounded and not self.has_hit:
+#		self.true_vel.y = 300;
 	self.has_hit = true;
 
 #func WalkExit():

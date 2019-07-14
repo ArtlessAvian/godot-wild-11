@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Entities/Entity.gd" type="Script" id=1]
 [ext_resource path="res://Assets/spritesheet test.png" type="Texture" id=2]
@@ -175,37 +175,45 @@ tracks/0/keys = {
 "values": [ 8, 9, 10, 11, 12 ]
 }
 
-[sub_resource type="AnimationNodeAnimation" id=14]
+[sub_resource type="AnimationNodeAnimation" id=9]
 animation = "Dead"
 
-[sub_resource type="AnimationNodeAnimation" id=9]
+[sub_resource type="AnimationNodeAnimation" id=10]
 animation = "Idle"
 
-[sub_resource type="AnimationNodeAnimation" id=10]
+[sub_resource type="AnimationNodeAnimation" id=11]
 animation = "Knockdown"
 
-[sub_resource type="AnimationNodeAnimation" id=11]
+[sub_resource type="AnimationNodeAnimation" id=12]
 animation = "Oof"
 
-[sub_resource type="AnimationNodeStateMachine" id=12]
-states/Dead/node = SubResource( 14 )
-states/Dead/position = Vector2( 390, 170 )
-states/Idle/node = SubResource( 9 )
-states/Idle/position = Vector2( 393, 94 )
-states/Knockdown/node = SubResource( 10 )
-states/Knockdown/position = Vector2( 212, 176 )
-states/Oof/node = SubResource( 11 )
-states/Oof/position = Vector2( 200, 94 )
-start_node = "Idle"
+[sub_resource type="AnimationNodeStateMachineTransition" id=13]
+advance_condition = "hitstun_done"
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=13]
+[sub_resource type="AnimationNodeStateMachineTransition" id=14]
+advance_condition = "hitstun_done"
+
+[sub_resource type="AnimationNodeStateMachine" id=15]
+states/Dead/node = SubResource( 9 )
+states/Dead/position = Vector2( 390, 170 )
+states/Idle/node = SubResource( 10 )
+states/Idle/position = Vector2( 393, 94 )
+states/Knockdown/node = SubResource( 11 )
+states/Knockdown/position = Vector2( 212, 176 )
+states/Oof/node = SubResource( 12 )
+states/Oof/position = Vector2( 200, 94 )
+transitions = [ "Oof", "Idle", SubResource( 13 ), "Knockdown", "Idle", SubResource( 14 ) ]
+start_node = "Idle"
+graph_offset = Vector2( -110, 30 )
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=16]
 
 [node name="Entity" type="Node2D"]
 script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
 modulate = Color( 1, 0.592157, 0.592157, 1 )
-position = Vector2( 0, -0.972904 )
+position = Vector2( 0, -1.69985 )
 scale = Vector2( 0.2, 0.2 )
 texture = ExtResource( 2 )
 vframes = 8
@@ -243,8 +251,9 @@ anims/Oof = SubResource( 7 )
 anims/WalkRight = SubResource( 8 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 12 )
+tree_root = SubResource( 15 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/playback = SubResource( 13 )
+parameters/playback = SubResource( 16 )
+parameters/conditions/hitstun_done = false
 [connection signal="area_entered" from="Hurtboxes" to="." method="_on_Hurtboxes_area_entered"]

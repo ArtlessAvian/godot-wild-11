@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://CustomYSort.gd" type="Script" id=1]
-[ext_resource path="res://Entities/EnemyTest.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Entities/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Assets/0effort.png" type="Texture" id=3]
 [ext_resource path="res://Scenes/Level.gd" type="Script" id=4]
-[ext_resource path="res://Entities/Player.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Entities/EnemyTest.tscn" type="PackedScene" id=5]
 
 [node name="Node2D" type="Node2D"]
 pause_mode = 2
@@ -18,40 +18,40 @@ texture = ExtResource( 3 )
 pause_mode = 1
 script = ExtResource( 1 )
 
-[node name="Player" parent="YSort" instance=ExtResource( 5 )]
+[node name="Player" parent="YSort" instance=ExtResource( 2 )]
 position = Vector2( -375.177, -10.0238 )
 
-[node name="Entity" parent="YSort" instance=ExtResource( 2 )]
+[node name="Entity" parent="YSort" instance=ExtResource( 5 )]
 position = Vector2( 174.7, 5.72791 )
 rotation = 3.14159
 scale = Vector2( 1, -1 )
 z_index = 1
 attack_hitstun = 0.0
 
-[node name="Entity4" parent="YSort" instance=ExtResource( 2 )]
+[node name="Entity4" parent="YSort" instance=ExtResource( 5 )]
 position = Vector2( -315.034, 0 )
 rotation = 3.14159
 scale = Vector2( 1, -1 )
 
-[node name="Entity2" parent="YSort" instance=ExtResource( 2 )]
+[node name="Entity2" parent="YSort" instance=ExtResource( 5 )]
 position = Vector2( 242.003, -74.4625 )
 rotation = 3.14159
 scale = Vector2( 1, -1 )
 attack_hitstun = 0.0
 
-[node name="Entity5" parent="YSort" instance=ExtResource( 2 )]
+[node name="Entity5" parent="YSort" instance=ExtResource( 5 )]
 position = Vector2( 105.966, -42.9591 )
 rotation = 3.14159
 scale = Vector2( 1, -1 )
 attack_hitstun = 0.0
 
-[node name="Entity3" parent="YSort" instance=ExtResource( 2 )]
+[node name="Entity3" parent="YSort" instance=ExtResource( 5 )]
 position = Vector2( 41.5272, 10.0238 )
 rotation = 3.14159
 scale = Vector2( 1, -1 )
 attack_hitstun = 0.0
 
-[node name="Entity6" parent="YSort" instance=ExtResource( 2 )]
+[node name="Entity6" parent="YSort" instance=ExtResource( 5 )]
 position = Vector2( 263.483, 8.59183 )
 rotation = 3.14159
 scale = Vector2( 1, -1 )
@@ -59,3 +59,28 @@ attack_hitstun = 0.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+
+[node name="Control" type="Control" parent="Camera2D"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -512.0
+margin_top = -300.0
+margin_right = 512.0
+margin_bottom = 300.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Camera2D/Control"]
+anchor_right = 0.124
+anchor_bottom = 0.177
+margin_left = 13.0
+margin_top = 66.0
+margin_right = -20.976
+margin_bottom = -3.2
+custom_colors/font_color = Color( 1, 0.737255, 0.121569, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+text = "Hello!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
